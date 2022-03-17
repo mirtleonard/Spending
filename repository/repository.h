@@ -11,7 +11,9 @@ typedef struct {
 } repository;
 
 repository * create_repository();
+repository * repository_filter(repository *repo, char *field, char *key);
 void add_to_repository(repository *repo, spending_type  *spending);
+void repository_modify(repository *repo, int id, double sum, char *type);
 void delete_repository(repository *repo);
 int delete_id(repository *repo, int id);
 void test_repository();

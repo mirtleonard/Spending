@@ -38,23 +38,41 @@ void ui_add(service *srv) {
     char *type = malloc(sizeof(char) * 10);
     scanf("%d %lf %s", &no_ap, &sum, type);
     add_spending(srv, no_ap, sum, type);
+    free(type);
 }
 void ui_remove(service *srv) {
-   return;
+    int id;
+    printf("Introdu id-ul cheltuielii: ");
+    scanf("%d", id);
+    remove_spending(srv, id);
 }
 void ui_modify(service *srv) {
-   return;
+    printf("Introdu id-ul, noua suma si noul tip pentru cheltuiala: ");
+    int id;
+    double sum;
+    char *type = malloc(sizeof(char) * 10);
+    scanf("%d %lf %s", &id, &sum, type);
+    service_modify(srv, id, sum, type);
+    free(type);
 }
 void ui_order(service *srv) {
    return;
 }
 void ui_filter(service *srv) {
-   return;
+    //field and key + validation
+    char *field = malloc(sizeof(char) * 10);
+    char *key = malloc(sizeof(char) * 10);
+    char *result;
+    printf("Introdu campul dupa care vrei sa filtrez(numar/suma/tip): ");
+    scanf("%s", field);
+    printf("Introdu valoarea dupa care vrei sa filtrezi, %s = ", field);
+    scanf("%s", key);
+    result = service_filter(srv, field, key);
+    printf("%s", result);
+    free(result);
+    free(field);
+    free(key);
 }
-void ui_view(service *srv) {
-   return;
-}
-
 
 void ui_run(ui_type *ui) {
     char *input = malloc(sizeof(char) * 10);
@@ -71,8 +89,6 @@ void ui_run(ui_type *ui) {
             ui_help();
         } else if (!strcmp(input, "add")) {
             ui_add(ui->srv);
-        } else if (!strcmp(input, "view")) {
-            ui_view(ui->srv);
         } else if (!strcmp(input, "modify")) {
             ui_modify(ui->srv);
         } else if (!strcmp(input, "remove")) {
@@ -87,5 +103,3 @@ void ui_run(ui_type *ui) {
     }
     free(input);
 }
-
-

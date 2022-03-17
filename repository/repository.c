@@ -41,6 +41,10 @@ void add_to_repository(repository *repo, spending_type  *spending) {
     repo->size++;
 }
 
+void repository_modify(repository *repo, int id, double sum, char *type) {
+    modify_spending(repo->list[id], sum, type);
+}
+
 int delete_id(repository *repo, int id) {
     if (id >= repo->size) {
         return 0;
@@ -68,7 +72,7 @@ repository *repository_filter(repository *repo, char *field, char *key) {
                 ++filtered->size;
             }
         } else if(!strcmp(field, "tip")) {
-            if (!strcmp(key, repo->list[i]->type) {
+            if (!strcmp(key, repo->list[i]->type)) {
                 filtered->list[filtered->size] = repo->list[i];
                 ++filtered->size;
             }
@@ -80,10 +84,22 @@ repository *repository_filter(repository *repo, char *field, char *key) {
 void test_repository() {
     repository *repo = create_repository();
     assert(repo != NULL);
-    spending_type *spending = create_spending(21, 100, "curent");
+    spending_type *spending = create_spending(21, 100.5, "curent");
     add_to_repository(repo, spending);
     spending = create_spending(20, 200, "gaz");
     add_to_repository(repo, spending);
+    spending = create_spending(20, 205.12, "curent");
+    add_to_repository(repo, spending);
+    repository_modify(repo, 0, 123, "curent");
+    repository *filtered = repository_filter(repo, "numar", "20");
+    assert(filtered->size == 2);
+    free(filtered);
+    filtered = repository_filter(repo, "suma", "200");
+    assert(filtered->size == 1);
+    free(filtered);
+    filtered = repository_filter(repo, "tip", "curent");
+    assert(filtered->size == 2);
+    free(filtered);
     assert(delete_id(repo, 0) == 1);
     delete_repository(repo);
 }
