@@ -23,12 +23,12 @@ void delete_ui(ui_type *ui) {
 
 void ui_help() {
     printf("'help' - afiseaza comenzile\n");
-    printf("'view' - afiseaza facturile\n");
     printf("'add' - adauga o factura\n");
     printf("'remove' - sterge o factura\n");
     printf("'modify' - modifica o factura\n");
-    printf("'order' - ordoneaza facturile dupa suma sau tip(crescator/descrescator)\n");
-    printf("'filter' - filtreaza facturile dupa suma, tip sau apartament(ex tip = 'gaz')\n");
+    printf("'print' - afiseaza toate facturile\n");
+    printf("'order' - ordoneaza facturile dupa suma (crescator/descrescator)\n");
+    printf("'filter' - filtreaza facturile dupa suma sau tip (ex tip = 'gaz')\n");
 }
 
 void ui_add(service *srv) {
@@ -43,7 +43,7 @@ void ui_add(service *srv) {
 void ui_remove(service *srv) {
     int id;
     printf("Introdu id-ul cheltuielii: ");
-    scanf("%d", id);
+    scanf("%d", &id);
     remove_spending(srv, id);
 }
 void ui_modify(service *srv) {
@@ -55,9 +55,23 @@ void ui_modify(service *srv) {
     service_modify(srv, id, sum, type);
     free(type);
 }
-void ui_order(service *srv) {
-   return;
+void ui_print(service *srv) {
+    char *result = service_print(srv);
+    printf("%s", result);
+    free(result);
 }
+
+void ui_order(service *srv) {
+    int op = 0, type = 0;
+    printf("Introdu 0 pentru a sorta descrescator si 1 pentru crescator: ");
+    scanf("%d", &op);
+    printf("Introdu 0 pentru a sorta dupa suma si 1 pentru a sorta dupa tip: ");
+    scanf("%d", &type);
+    char *result = service_order(srv, op, type);
+    printf("%s", result);
+    free(result);
+}
+
 void ui_filter(service *srv) {
     //field and key + validation
     char *field = malloc(sizeof(char) * 10);
@@ -95,10 +109,14 @@ void ui_run(ui_type *ui) {
             ui_remove(ui->srv);
         } else if (!strcmp(input, "order")) {
             ui_order(ui->srv);
+           return;
         } else if (!strcmp(input, "filter")) {
             ui_filter(ui->srv);
+            return;
+        } else if (!strcmp(input, "print")) {
+            ui_print(ui->srv);
         } else {
-            printf("Ai introdus o comanda invalida, introdu 'help' daca te-ai blocat");
+            printf("Ai introdus o comanda invalida, introdu 'help' daca te-ai blocat\n");
         }
     }
     free(input);

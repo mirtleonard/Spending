@@ -14,8 +14,9 @@ void delete_service(service *srv);
 int add_spending(service *srv, int ap_no, double sum, char *type);
 int service_modify(service *srv, int id, double sum, char *type);
 int remove_spending(service *srv, int id);
-char *service_order(service *srv, char *field, char *key);
+char *service_order(service *srv, int op, int type);
 char *service_filter(service *srv, char *field, char *key);
+char *service_print(service *srv);
 void test_service();
 
 #endif //LAB3_SERVICE_H
