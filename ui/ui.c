@@ -37,14 +37,14 @@ void ui_add(service *srv) {
     double sum;
     char *type = malloc(sizeof(char) * 10);
     scanf("%d %lf %s", &no_ap, &sum, type);
-    add_spending(srv, no_ap, sum, type);
+    service_add(srv, no_ap, sum, type);
     free(type);
 }
 void ui_remove(service *srv) {
     int id;
     printf("Introdu id-ul cheltuielii: ");
     scanf("%d", &id);
-    remove_spending(srv, id);
+    service_remove(srv, id);
 }
 void ui_modify(service *srv) {
     printf("Introdu id-ul, noua suma si noul tip pentru cheltuiala: ");

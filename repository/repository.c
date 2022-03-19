@@ -34,7 +34,7 @@ void realloc_repository(repository *repo, int new_capacity) {
     repo->capacity = new_capacity;
 }
 
-void add_to_repository(repository *repo, spending_type  *spending) {
+void repository_add(repository *repo, spending_type  *spending) {
     if (repo->size == repo->capacity) {
         realloc_repository(repo, repo->capacity * 2);
     }
@@ -46,7 +46,7 @@ void repository_modify(repository *repo, int id, double sum, char *type) {
     modify_spending(repo->list[id], sum, type);
 }
 
-int delete_id(repository *repo, int id) {
+int repository_delete(repository *repo, int id) {
     if (id >= repo->size) {
         return 0;
     }
@@ -130,11 +130,11 @@ repository *repository_order(repository *repo, int op, int type) {
 void test_repository() {
     repository *repo = create_repository();
     spending_type *spending = create_spending(21, 100.5, "curent");
-    add_to_repository(repo, spending);
+    repository_add(repo, spending);
     spending = create_spending(20, 205.12, "curent");
-    add_to_repository(repo, spending);
+    repository_add(repo, spending);
     spending = create_spending(20, 200, "gaz");
-    add_to_repository(repo, spending);
+    repository_add(repo, spending);
     repository_modify(repo, 0, 123, "curent");
     repository *filtered = repository_filter(repo, "numar", "20");
     assert(filtered->size == 2);
@@ -160,7 +160,7 @@ void test_repository() {
     ordered = repository_order(repo, 1, 1);
     free(ordered->list);
     free(ordered);
-    assert(delete_id(repo, 0) == 1);
-    assert(delete_id(repo, 100) == 0);
+    assert(repository_delete(repo, 0) == 1);
+    assert(repository_delete(repo, 100) == 0);
     delete_repository(repo);
 }

@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "domain/spending.h"
 #include "repository/repository.h"
 #include "utils/service.h"
@@ -13,6 +10,6 @@ int main() {
     repository *repo = create_repository();
     service *srv = create_service(repo);
     ui_type *ui = create_ui(srv);
-    //ui_run(ui);
+    ui_run(ui);
     delete_ui(ui);
 }

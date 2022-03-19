@@ -15,7 +15,6 @@ service *create_service(repository *repo) {
    return srv;
 }
 
-
 char *stringify(repository *repo) {
     char *result = (char *) malloc(repo->size * 100 * sizeof(char));
     char *int_to_char = (char *) malloc(10 * sizeof(char));
@@ -47,16 +46,16 @@ void delete_service(service *srv) {
     free(srv);
 }
 
-int add_spending(service *srv, int ap_no, double sum, char *type) {
+int service_add(service *srv, int ap_no, double sum, char *type) {
     //validators
     spending_type *spending = create_spending(ap_no, sum, type);
-    add_to_repository(srv->repo, spending);
+    repository_add(srv->repo, spending);
     return 1;
 }
 
-int remove_spending(service *srv, int id) {
+int service_remove(service *srv, int id) {
     //validators
-    delete_id(srv->repo, id);
+    repository_delete(srv->repo, id);
     return 1;
 }
 
@@ -75,15 +74,15 @@ char *service_order(service *srv, int op, int type) {
 void test_service() {
     repository *repo = create_repository();
     service *srv = create_service(repo);
-    add_spending(srv, 18, 2000, "gaz");
-    add_spending(srv, 17, 1031.5, "gaz");
-    add_spending(srv, 16, 31.5, "curent");
+    service_add(srv, 18, 2000, "gaz");
+    service_add(srv, 17, 1031.5, "gaz");
+    service_add(srv, 16, 31.5, "curent");
     service_modify(srv, 0, 1999.2, "gaz");
     service_order(srv, 1, 1);
     char *result = service_filter(srv, "tip", "gaz");
     service_print(srv);
     //assert(!strcmp(result, "18 1999.200000 gaz\n17 1031.500000 gaz\n"));
     free(result);
-    remove_spending(srv, 0);
+    service_remove(srv, 0);
     delete_service(srv);
 }

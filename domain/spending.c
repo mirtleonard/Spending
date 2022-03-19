@@ -3,7 +3,6 @@
 //
 
 #include<assert.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include "string.h"
 #include "spending.h"
@@ -37,6 +36,6 @@ void test_domain() {
     assert(!strcmp(spending->type, type));
     modify_spending(spending, 20.4, "curent");
     assert(spending->sum != sum);
-    assert(strcmp(spending->type, type));
+    assert(strcmp(spending->type, type) != 0);
     delete_spending(spending);
 }
