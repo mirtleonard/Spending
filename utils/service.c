@@ -16,8 +16,8 @@ service *create_service(repository *repo) {
 }
 
 char *stringify(repository *repo) {
-    char *result = (char *) malloc(repo->size * 100 * sizeof(char));
-    char *int_to_char = (char *) malloc(10 * sizeof(char));
+    char *result = malloc(repo->size * 100 * sizeof(char));
+    char *int_to_char = malloc(100 * sizeof(char));
     result[0] = 0;
     for (int i = 0; i < repo->size; ++i) {
         sprintf(int_to_char, "%d ", repo->list[i]->ap_no);
@@ -68,8 +68,7 @@ int service_modify(service *srv, int id, double sum, char *type) {
 }
 
 char *service_order(service *srv, int op, int type) {
-    repository *ordered = create_repository();
-    ordered = repository_order(srv->repo, op, type);
+    repository *ordered = repository_order(srv->repo, op, type);
     char *result = stringify(ordered);
     free(ordered->list);
     free(ordered);

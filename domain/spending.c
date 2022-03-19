@@ -9,7 +9,7 @@
 
 spending_type *create_spending(int ap_no, double sum, char *type) {
     spending_type *spending  = malloc(sizeof(spending_type));
-    spending->type = malloc(strlen(type));
+    spending->type = malloc(sizeof(char) * 100);
     strcpy(spending->type, type);
     spending->sum = sum;
     spending->ap_no = ap_no;

@@ -12,7 +12,7 @@ repository *create_repository() {
     repository *repo = malloc(sizeof(repository));
     repo->capacity = 1;
     repo->size = 0;
-    repo->list = malloc(repo->capacity * sizeof(spending_type*));
+    repo->list = malloc(repo->capacity * sizeof(spending_type));
     return  repo;
 }
 

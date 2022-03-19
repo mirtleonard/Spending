@@ -98,7 +98,6 @@ void ui_run(ui_type *ui) {
         if (!strcmp(input, "exit")) {
             printf("Bye\n");
             free(input);
-            delete_ui(ui);
             return;
         } else if (!strcmp(input, "help")) {
             ui_help();
