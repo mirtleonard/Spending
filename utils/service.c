@@ -34,6 +34,8 @@ char *stringify(repository *repo) {
 char *service_filter(service *srv, char *field, char *key) {
    repository *filtered = repository_filter(srv->repo, field, key);
    char *result = stringify(filtered);
+   free(filtered->list);
+   free(filtered);
    return result;
 }
 
@@ -68,7 +70,10 @@ int service_modify(service *srv, int id, double sum, char *type) {
 char *service_order(service *srv, int op, int type) {
     repository *ordered = create_repository();
     ordered = repository_order(srv->repo, op, type);
-    return stringify(ordered);
+    char *result = stringify(ordered);
+    free(ordered->list);
+    free(ordered);
+    return result;
 }
 
 void test_service() {
@@ -78,10 +83,12 @@ void test_service() {
     service_add(srv, 17, 1031.5, "gaz");
     service_add(srv, 16, 31.5, "curent");
     service_modify(srv, 0, 1999.2, "gaz");
-    service_order(srv, 1, 1);
     char *result = service_filter(srv, "tip", "gaz");
-    service_print(srv);
-    //assert(!strcmp(result, "18 1999.200000 gaz\n17 1031.500000 gaz\n"));
+    free(result);
+    result = service_order(srv, 1, 1);
+    free(result);
+    result = service_print(srv);
+    assert(!strcmp(result, "18 1999.200000 gaz\n17 1031.500000 gaz\n16 31.500000 curent\n"));
     free(result);
     service_remove(srv, 0);
     delete_service(srv);
