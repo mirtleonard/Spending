@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err34-c"
 //
 // Created by leonard on 16.03.2022.
 //
@@ -119,5 +121,4 @@ void ui_run(ui_type *ui) {
             printf("Ai introdus o comanda invalida, introdu 'help' daca te-ai blocat\n");
         }
     }
-    free(input);
 }

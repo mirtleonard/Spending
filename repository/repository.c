@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err34-c"
 //
 // Created by leonard on 13.03.2022.
 //
@@ -8,6 +10,8 @@
 #include <assert.h>
 #include <string.h>
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "DanglingPointer"
 repository *create_repository() {
     repository *repo = malloc(sizeof(repository));
     repo->capacity = 1;
@@ -88,29 +92,36 @@ void swap(repository *ordered, int i, int j) {
     ordered->list[j] = spending;
 }
 
+int compare(repository *ordered, int i, int j, int op, int type) {
+    if (type) {
+        if (op) {
+            if (strcmp(ordered->list[i]->type, ordered->list[j]->type) > 0) {
+                return 1;
+            }
+        } else {
+            if (strcmp(ordered->list[j]->type, ordered->list[i]->type) > 0) {
+                return 1;
+            }
+        }
+    } else {
+        if (op) {
+            if (ordered->list[i]->sum > ordered->list[j]->sum) {
+                return 1;
+            }
+        } else {
+            if (ordered->list[i]->sum < ordered->list[j]->sum) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 void sort(repository *ordered, int op, int type) {
     for (int i = 0; i < ordered->size; ++i) {
         for (int j = i + 1; j < ordered->size; ++j) {
-            if (type) {
-                if (op) {
-                    if (strcmp(ordered->list[i]->type, ordered->list[j]->type) > 0) {
-                       swap(ordered, i, j);
-                    }
-                } else {
-                    if (strcmp(ordered->list[j]->type, ordered->list[i]->type) > 0) {
-                       swap(ordered, i, j);
-                    }
-                }
-            } else {
-                if (op) {
-                    if (ordered->list[i]->sum > ordered->list[j]->sum) {
-                        swap(ordered, i, j);
-                    }
-                } else {
-                    if (ordered->list[i]->sum < ordered->list[j]->sum) {
-                        swap(ordered, i, j);
-                    }
-                }
+            if (compare(ordered, i, j, op, type)) {
+                swap(ordered, i, j);
             }
         }
     }

@@ -10,6 +10,6 @@ int main() {
     repository *repo = create_repository();
     service *srv = create_service(repo);
     ui_type *ui = create_ui(srv);
-    //ui_run(ui);
+    ui_run(ui);
     delete_ui(ui);
 }
