@@ -10,6 +10,7 @@
 #include "../domain/spending.h"
 #include "../repository/repository.h"
 #include "../utils/service.h"
+#include "../validators/validator.h"
 #include "ui.h"
 
 ui_type *create_ui(service *srv) {
@@ -35,28 +36,48 @@ void ui_help() {
 
 void ui_add(service *srv) {
     printf("Introdu numarul apartamentului, suma si tipul cheltuielii:\n");
+    char *input = malloc(sizeof(char) * 1000);
+    char *type = malloc(sizeof(char) * 500);
     int no_ap;
     double sum;
-    char *type = malloc(sizeof(char) * 10);
-    scanf("%d %lf %s", &no_ap, &sum, type);
-    service_add(srv, no_ap, sum, type);
+    gets(input);
+    if (validate_add(input, &no_ap, &sum, type)) {
+        service_add(srv, no_ap, sum, type);
+    } else {
+        printf("Nu ai introdus input-ul corect\n");
+    }
     free(type);
+    free(input);
 }
+
 void ui_remove(service *srv) {
     int id;
+    char *input = malloc(sizeof(char) * 1000);
     printf("Introdu id-ul cheltuielii: ");
-    scanf("%d", &id);
-    service_remove(srv, id);
+    gets(input);
+    if (validate_remove(input, &id, srv->repo->size)) {
+        service_remove(srv, id);
+    } else {
+        printf("Nu ai introdus input-ul corect\n");
+    }
+    free(input);
 }
+
 void ui_modify(service *srv) {
-    printf("Introdu id-ul, noua suma si noul tip pentru cheltuiala: ");
     int id;
     double sum;
-    char *type = malloc(sizeof(char) * 10);
-    scanf("%d %lf %s", &id, &sum, type);
-    service_modify(srv, id, sum, type);
+    char *type = malloc(sizeof(char) * 500);
+    char *input = malloc(sizeof(char) * 1000);
+    printf("Introdu id-ul, noua suma si noul tip pentru cheltuiala: ");
+    if (validate_modify(input, &id, &sum, type)) {
+        service_modify(srv, id, sum, type);
+    } else {
+        printf("Nu ai introdus input-ul corect\n");
+    }
     free(type);
+    free(input);
 }
+
 void ui_print(service *srv) {
     char *result = service_print(srv);
     printf("%s", result);
@@ -65,19 +86,24 @@ void ui_print(service *srv) {
 
 void ui_order(service *srv) {
     int op = 0, type = 0;
+    char *input1 = malloc(sizeof(char) * 1000);
+    char *input2 = malloc(sizeof(char) * 1000);
     printf("Introdu 0 pentru a sorta descrescator si 1 pentru crescator: ");
-    scanf("%d", &op);
+    gets(input1);
     printf("Introdu 0 pentru a sorta dupa suma si 1 pentru a sorta dupa tip: ");
-    scanf("%d", &type);
-    char *result = service_order(srv, op, type);
-    printf("%s", result);
-    free(result);
+    gets(input2);
+    if (validate_order(input1, input2, &op, &type)) {
+        char *result = service_order(srv, op, type);
+        printf("%s", result);
+        free(result);
+    } else {
+        printf("Nu ai introdus inputul corect\n");
+    }
 }
 
 void ui_filter(service *srv) {
-    //field and key + validation
-    char *field = malloc(sizeof(char) * 10);
-    char *key = malloc(sizeof(char) * 10);
+    char *field = malloc(sizeof(char) * 1000);
+    char *key = malloc(sizeof(char) * 1000);
     char *result;
     printf("Introdu campul dupa care vrei sa filtrez(numar/suma/tip): ");
     scanf("%s", field);
@@ -90,13 +116,22 @@ void ui_filter(service *srv) {
     free(key);
 }
 
+void add_default(service *srv) {
+    service_add(srv, 1, 200.32,"gaz");
+    service_add(srv, 1, 10.21,"curent");
+    service_add(srv, 2, 1901,"gaz");
+    service_add(srv, 3, 90.85,"apa");
+    service_add(srv, 1, 10.32,"canal");
+}
+
 void ui_run(ui_type *ui) {
-    char *input = malloc(sizeof(char) * 10);
+    add_default(ui->srv);
+    char *input = malloc(sizeof(char) * 1000);
     printf("Salutare, aceasta aplicatie gestioneaza facturile tale\n"
            "pentru a afla ce poti face in aplicatie introdu comanda 'help'\n"
            "iar daca vrei sa iesi din aplicatie introdu comanda 'exit'\n");
     while(1) {
-        scanf("%s", input);
+        gets(input);
         if (!strcmp(input, "exit")) {
             printf("Bye\n");
             free(input);
@@ -111,10 +146,8 @@ void ui_run(ui_type *ui) {
             ui_remove(ui->srv);
         } else if (!strcmp(input, "order")) {
             ui_order(ui->srv);
-           return;
         } else if (!strcmp(input, "filter")) {
             ui_filter(ui->srv);
-            return;
         } else if (!strcmp(input, "print")) {
             ui_print(ui->srv);
         } else {

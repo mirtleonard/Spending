@@ -1,5 +1,7 @@
 #pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err34-c"
+#pragma ide diagnos
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "DanglingPointer"tic ignored "cert-err34-c"
 //
 // Created by leonard on 13.03.2022.
 //
@@ -10,8 +12,6 @@
 #include <assert.h>
 #include <string.h>
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "DanglingPointer"
 repository *create_repository() {
     repository *repo = malloc(sizeof(repository));
     repo->capacity = 1;
@@ -67,12 +67,12 @@ repository *repository_filter(repository *repo, char *field, char *key) {
     realloc_repository(filtered, repo->size);
     for (int i = 0; i < repo->size; ++i) {
         if (!strcmp(field, "numar")) {
-            if (atoi(key) == repo->list[i]->ap_no) {
+            if (strtol(key, NULL, 10) == repo->list[i]->ap_no) {
                 filtered->list[filtered->size] = repo->list[i];
                 ++filtered->size;
             }
         } else if(!strcmp(field, "suma")) {
-            if (atoi(key) == repo->list[i]->sum) {
+            if (strtof(key, NULL) == repo->list[i]->sum) {
                 filtered->list[filtered->size] = repo->list[i];
                 ++filtered->size;
             }

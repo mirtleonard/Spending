@@ -8,9 +8,9 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "DanglingPointer"
+
 service *create_service(repository *repo) {
    service *srv = malloc(sizeof(service));
    srv->repo = repo;
